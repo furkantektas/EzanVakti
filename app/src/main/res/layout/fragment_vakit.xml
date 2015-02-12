@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ezanvakti.ui.VakitFragment"
+    android:orientation="vertical"
+    android:background="@android:color/black"
+    android:animateLayoutChanges="true">
+    <com.innovattic.font.FontTextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:drawingCacheQuality="high"
+        app:font="Icons"
+        android:text=""
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textColor="#ffffff"
+        android:id="@+id/settings_icon"
+        android:textSize="30dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:background="#000000"
+        android:animateLayoutChanges="true"
+        android:id="@+id/vakit_container">
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="2"
+    android:id="@+id/vakit_row">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical|right"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:id="@+id/alarm_container"
+        android:layout_gravity="center_vertical|right">
+
+        <com.innovattic.font.FontTextView
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            app:font="Icons"
+            android:textSize="20dp"
+            android:textColor="#ffffff"
+            android:layout_gravity="center_vertical|right"
+            android:gravity="center_vertical" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/vakit_info_container">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:animateLayoutChanges="true"
+            android:layout_gravity="right|center_vertical">
+
+            <com.innovattic.font.FontTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:font="RobotoCondensed"
+            android:textColor="#ffffff"
+            android:text="@string/imsak"
+            android:textStyle="italic"
+            android:id="@+id/vakit_label"/>
+
+            <com.innovattic.font.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:text="00:00"
+                app:font="RobotoCondensed"
+                android:textStyle="bold"
+                android:textSize="60dp"
+                android:textColor="#ffffff"
+                android:id="@+id/vakit_remaining_time"
+                android:layout_below="@+id/vakit_time"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:visibility="visible"
+                android:gravity="center_vertical" />
+
+            <com.innovattic.font.FontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textColor="#ffffff"
+                app:font="RobotoCondensed"
+                android:id="@+id/vakit_time"
+                android:layout_below="@+id/vakit_label"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+        </LinearLayout>
+
+        <com.innovattic.font.FontTextView
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            app:font="Icons"
+            android:textColor="#ffffff"
+            android:textSize="20dp"
+            android:layout_gravity="right"
+            android:gravity="center_vertical"
+            android:layout_marginRight="20dp" />
+
+    </FrameLayout>
+
+</FrameLayout>

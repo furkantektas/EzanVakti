@@ -1,0 +1,3 @@
+[submodule "Android-Font-Integration"]
+	path = Android-Font-Integration
+	url = https://github.com/Innovattic/Android-Font-Integration.git

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Ezan Vakti</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="err_get_ulke_list">Unable to get countries list. Please check your connection and try again.</string>
+    <string name="err_get_sehir_list">Unable to get states list. Please check your connection and try again.</string>
+    <string name="err_get_ilce_list">Unable to get cities list. Please check your connection and try again.</string>
+    <string name="err_get_vakitler">Unable to get prayer times data. Please check your connection and try again.</string>
+    <string name="imsak">İmsak</string>
+    <string name="gunes">Güneş</string>
+    <string name="ogle">Öğle</string>
+    <string name="ikindi">İkindi</string>
+    <string name="aksam">Akşam</string>
+    <string name="yatsi">Yatsı</string>
+    <string name="kible">Kıble</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
