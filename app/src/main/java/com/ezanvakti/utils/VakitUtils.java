@@ -11,7 +11,7 @@ public class VakitUtils {
     /**
      * Returns the index of next vakit
      * @param v
-     * @return index of next vakit, -1 after yatsi/ishaa.
+     * @return index of next vakit, 0 after yatsi/ishaa.
      */
     public static int getNextVakit(Vakit v) {
         Date now = new Date();
@@ -19,6 +19,6 @@ public class VakitUtils {
             if(!now.before(v.getVakit(i)))
                 return i;
         }
-        return -1;
+        return 0;
     }
 }
