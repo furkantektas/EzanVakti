@@ -19,6 +19,7 @@ public class WeightAnimation extends Animation {
         mStartWeight = lp.weight;
         mDeltaWeight = endWeight - mStartWeight;
         setFillAfter(true);
+        setDuration(270);
     }
 
     @Override

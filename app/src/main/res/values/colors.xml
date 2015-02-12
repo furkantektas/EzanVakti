@@ -6,4 +6,12 @@
     <color name="ikindi">#db8876</color>
     <color name="aksam">#74bddb</color>
     <color name="yatsi">#43577e</color>
+
+    <color name="primary_bg">#222151</color>
+    <color name="primary_dark">#16153d</color>
+    <color name="primary_text">#ffffff</color>
+    <color name="primary_overlay_bg">#383762</color>
+
+    <color name="negative_action">#F07777</color>
+    <color name="positive_action">#77f0bf</color>
 </resources>

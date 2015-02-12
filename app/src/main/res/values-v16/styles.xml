@@ -1,7 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:windowBackground">@color/primary_bg</item>
         <item name="android:colorBackground">@color/primary_bg</item>
         <item name="android:textColorPrimary">#ffffff</item>

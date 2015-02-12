@@ -12,7 +12,7 @@
         android:layout_height="0dp"
         android:drawingCacheQuality="high"
         app:font="Icons"
-        android:text=""
+        android:text=""
         android:layout_gravity="center"
         android:gravity="center"
         android:padding="10dp"

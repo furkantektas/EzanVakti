@@ -5,7 +5,6 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
 import com.ezanvakti.utils.UnitConverter;
-import com.innovattic.font.FontTextView;
 
 /**
  * Created by Furkan Tektas on 2/12/15.

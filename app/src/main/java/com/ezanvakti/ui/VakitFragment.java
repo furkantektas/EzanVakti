@@ -3,18 +3,19 @@ package com.ezanvakti.ui;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.ezanvakti.R;
 import com.ezanvakti.anim.RemainingTimeRevealAnimation;
@@ -25,6 +26,7 @@ import com.ezanvakti.db.model.Vakit;
 import com.ezanvakti.utils.ColorUtils;
 import com.ezanvakti.utils.DBUtils;
 import com.ezanvakti.utils.OnSwipeTouchListener;
+import com.ezanvakti.utils.UnitConverter;
 import com.ezanvakti.utils.VakitUtils;
 import com.innovattic.font.FontTextView;
 
@@ -61,6 +63,11 @@ public class VakitFragment extends Fragment {
     private View mRootView = null;
     private int[] mColors = new int[6];
     private int mActive = -1;
+    // TODO: initialize alarms according to shared prefs
+    private boolean[] mAlarms = new boolean[6];
+
+    private static final int LEFT_SLIDE_AMOUNT_DP = 50;
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -80,6 +87,8 @@ public class VakitFragment extends Fragment {
     }
 
     public VakitFragment() {
+        for(int i = 0; i < mAlarms.length; ++i)
+            mAlarms[i] = true;
     }
 
     @Override
@@ -127,7 +136,7 @@ public class VakitFragment extends Fragment {
         mVakitContainer.startAnimation(anim);
 
 
-        Animation reveal = new RevealAnimation(mSettingsButton,show,50);
+        Animation reveal = new RevealAnimation(mSettingsButton,show,LEFT_SLIDE_AMOUNT_DP);
         mSettingsButton.startAnimation(reveal);
         mIsSettingsButtonVisible = show;
     }
@@ -154,10 +163,14 @@ public class VakitFragment extends Fragment {
             row.label = (FontTextView) temp.findViewById(R.id.vakit_label);
             row.time = (FontTextView) temp.findViewById(R.id.vakit_time);
             row.remainingTime = (FontTextView) temp.findViewById(R.id.vakit_remaining_time);
+            row.alarmIcon = (FontTextView) temp.findViewById(R.id.alarm_icon);
+            row.alarmStatus = (FontTextView) temp.findViewById(R.id.alarm_status);
 
             row.label.setShadowLayer(0,1,1, SHADOW_COLOR);
             row.time.setShadowLayer(0,1,1, SHADOW_COLOR);
             row.remainingTime.setShadowLayer(0,1,1, SHADOW_COLOR);
+            row.label.setShadowLayer(0,1,1, SHADOW_COLOR);
+            row.alarmIcon.setShadowLayer(0, 1, 1, SHADOW_COLOR);
 
             row.label.setText(mVakit.getVakitStringResource(i));
             row.time.setText(HHMM.format(mVakit.getVakit(i)));
@@ -167,9 +180,21 @@ public class VakitFragment extends Fragment {
             row.infoContainer.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
                 @Override
                 public void onSwipeLeft() {
+                    final OnSwipeTouchListener swipeListener = this;
+                    // clearing on touch listener
+                    row.infoContainer.setOnTouchListener(null);
                     super.onSwipeLeft();
                     RevealHideBySlideAnimation.startAnimation(row.infoContainer,50);
+                    toggleAlarm(pos);
                     toggleSettings(false);
+
+                    // setting touch listener back when animation is completed
+                    row.infoContainer.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            row.infoContainer.setOnTouchListener(swipeListener);
+                        }
+                    },1000+270*2);
                 }
 
                 @Override
@@ -190,6 +215,17 @@ public class VakitFragment extends Fragment {
                     toggleSettings(false);
                     super.onClick();
                 }
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    // cancel all touch events if settings button is visible
+                    // and close settings bar
+                    if(mIsSettingsButtonVisible) {
+                        toggleSettings(false);
+                        return false;
+                    }
+                    return super.onTouch(v, event);
+                }
             });
 
             mVakitContainer.addView(temp);
@@ -199,16 +235,21 @@ public class VakitFragment extends Fragment {
         setActive(active);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("onResume","VakitFragment");
+        setActive(mActive, true);
+    }
+
     private void setWeights(int active) {
         Log.i("setWeights",active+"");
         for(int i=0;i<6;++i) {
-            int weight = 1;
+            int weight = 2;
             if (i == active)
                 weight = 8;
             else if (i == (active + 1))
                 weight = 3;
-            else if (i == (active - 1))
-                weight = 2;
             Animation anim = new WeightAnimation(rows.get(i).container,weight);
             anim.setDuration(230);
             rows.get(i).container.startAnimation(anim);
@@ -231,16 +272,30 @@ public class VakitFragment extends Fragment {
                 }
 
             });
-            colorAnimation.setDuration(230);
+            colorAnimation.setDuration(270);
             colorAnimation.start();
             mColors[i] = colorTo;
             rows.get(i).alarmContainer.setBackgroundColor(ColorUtils.shadeColor(activeColor, i * 0.1f + 0.4f) );
         }
         mVakitContainer.requestLayout();
+
+        if(Build.VERSION.SDK_INT >= 21)
+            getActivity().getWindow().setStatusBarColor(ColorUtils.shadeColor(activeColor,0.8f));
     }
 
     private void setActive(int pos) {
-        if(mActive == pos)
+        setActive(pos,false);
+    }
+
+    /**
+     * Sets backgrounds and weights of athan times' rows.
+     *
+     * @param pos active row position.
+     * @param forceUpdate if true, active position checking will be
+     *                    ignored and rows will be updated
+     */
+    private void setActive(int pos, boolean forceUpdate) {
+        if(!forceUpdate && mActive == pos)
             return;
         setBackgrounds(pos);
         setWeights(pos);
@@ -258,6 +313,64 @@ public class VakitFragment extends Fragment {
         v.startAnimation(a);
     }
 
+    private void setAlarm(final int pos, final boolean status) {
+        Log.i("Alarm",status+"");
+//        float fromAlpha = status ? 0f : 1f;
+//        float toAlpha = status ? 1f : 0f;
+//        Animation a = new AlphaAnimation(fromAlpha,toAlpha);
+//        a.setDuration(230);
+//        a.setFillAfter(true);
+        float deltaPX = UnitConverter.dpToPx(LEFT_SLIDE_AMOUNT_DP);
+        float fromXDelta = status ? deltaPX : 0;
+        float toXDelta = status ? 0 : deltaPX;
+        Animation tr = new TranslateAnimation(fromXDelta, toXDelta,0,0);
+        tr.setFillAfter(true);
+        tr.setDuration(270);
+        if(status)
+            tr.setStartOffset(1000+270);
+        tr.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                rows.get(pos).alarmIcon.setVisibility(status ? View.VISIBLE : View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        rows.get(pos).alarmIcon.clearAnimation();
+        rows.get(pos).alarmIcon.startAnimation(tr);
+        // TODO: save alarm status to sharedprefs.
+
+        rows.get(pos).alarmStatus.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(status) {
+                    rows.get(pos).alarmStatus.setText(""); // cancel
+                    rows.get(pos).alarmStatus.setTextColor(getResources().getColor(R.color.negative_action));
+                } else {
+                    rows.get(pos).alarmStatus.setText(""); // tick
+                    rows.get(pos).alarmStatus.setTextColor(getResources().getColor(R.color.positive_action));
+                }
+            }
+        },1000+270*2);
+    }
+
+    private boolean getAlarmStatus(int pos) {
+        return mAlarms[pos];
+    }
+
+    private void toggleAlarm(int pos) {
+        mAlarms[pos] = !mAlarms[pos];
+        setAlarm(pos,mAlarms[pos]);
+    }
+
     private void scaleUpRemainingTime(int pos) {
         remainingTimeAnimation(pos,true);
     }
@@ -273,5 +386,7 @@ public class VakitFragment extends Fragment {
         public FontTextView label;
         public FontTextView time;
         public FontTextView remainingTime;
+        public FontTextView alarmIcon;
+        public FontTextView alarmStatus;
     }
 }
