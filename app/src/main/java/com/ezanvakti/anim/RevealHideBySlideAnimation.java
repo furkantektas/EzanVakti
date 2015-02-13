@@ -17,7 +17,7 @@ public class RevealHideBySlideAnimation  {
         final float marginPX = UnitConverter.dpToPx(marginDP);
 
         TranslateAnimation translateAnimation1 = new TranslateAnimation(0.0f,-marginPX,0f,0.0f);
-        translateAnimation1.setDuration(270); // in ms
+        translateAnimation1.setDuration(AnimConstants.ANIM_TIME); // in ms
         v.startAnimation(translateAnimation1);
         translateAnimation1.setAnimationListener(new Animation.AnimationListener() {
             @Override

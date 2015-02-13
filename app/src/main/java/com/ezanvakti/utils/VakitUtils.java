@@ -16,9 +16,23 @@ public class VakitUtils {
     public static int getNextVakit(Vakit v) {
         Date now = new Date();
         for(int i = 0; i < 6; ++i) {
-            if(!now.before(v.getVakit(i)))
+            if(now.before(v.getVakit(i)))
                 return i;
         }
         return 0;
+    }
+
+    /**
+     * Returns the index of current vakit
+     * @param v
+     * @return index of vakit
+     */
+    public static int getCurrentVakit(Vakit v) {
+        Date now = new Date();
+        for(int i = 5; i >= 0; --i) {
+            if(!now.before(v.getVakit(i)))
+                return i+1;
+        }
+        return 5;
     }
 }

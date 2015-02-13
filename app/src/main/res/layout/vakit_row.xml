@@ -91,7 +91,8 @@
             android:layout_gravity="center_vertical|right"
             android:gravity="center_vertical|center_horizontal"
             android:id="@+id/alarm_icon"
-            android:alpha="0" />
+            android:alpha="1"
+            android:visibility="gone"/>
 
     </FrameLayout>
 

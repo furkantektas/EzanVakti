@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.ezanvakti.R;
+import com.ezanvakti.anim.AnimConstants;
 import com.ezanvakti.anim.RemainingTimeRevealAnimation;
 import com.ezanvakti.anim.RevealAnimation;
 import com.ezanvakti.anim.RevealHideBySlideAnimation;
@@ -50,6 +51,7 @@ public class VakitFragment extends Fragment {
     public static final String FRAGMENT_NAME = "VakitFragment";
 
     private static final int SHADOW_COLOR = Color.argb((int)(255*0.2),0,0,0);
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -88,7 +90,7 @@ public class VakitFragment extends Fragment {
 
     public VakitFragment() {
         for(int i = 0; i < mAlarms.length; ++i)
-            mAlarms[i] = true;
+            mAlarms[i] = false;
     }
 
     @Override
@@ -131,7 +133,7 @@ public class VakitFragment extends Fragment {
         else
             anim = new AlphaAnimation(0.7f,1f);
 
-        anim.setDuration(270);
+        anim.setDuration(AnimConstants.ANIM_TIME);
         anim .setFillAfter(true);
         mVakitContainer.startAnimation(anim);
 
@@ -194,7 +196,7 @@ public class VakitFragment extends Fragment {
                         public void run() {
                             row.infoContainer.setOnTouchListener(swipeListener);
                         }
-                    },1000+270*2);
+                    },AnimConstants.WAIT_TIME+AnimConstants.ANIM_TIME*2);
                 }
 
                 @Override
@@ -231,7 +233,8 @@ public class VakitFragment extends Fragment {
             mVakitContainer.addView(temp);
             rows.add(row);
         }
-        int active = VakitUtils.getNextVakit(mVakit);
+        int active = VakitUtils.getCurrentVakit(mVakit);
+        Log.i("Active",""+active);
         setActive(active);
     }
 
@@ -251,7 +254,7 @@ public class VakitFragment extends Fragment {
             else if (i == (active + 1))
                 weight = 3;
             Animation anim = new WeightAnimation(rows.get(i).container,weight);
-            anim.setDuration(230);
+            anim.setDuration(AnimConstants.ANIM_TIME);
             rows.get(i).container.startAnimation(anim);
         }
         mVakitContainer.requestLayout();
@@ -272,15 +275,17 @@ public class VakitFragment extends Fragment {
                 }
 
             });
-            colorAnimation.setDuration(270);
+            colorAnimation.setDuration(AnimConstants.ANIM_TIME*5);
             colorAnimation.start();
             mColors[i] = colorTo;
             rows.get(i).alarmContainer.setBackgroundColor(ColorUtils.shadeColor(activeColor, i * 0.1f + 0.4f) );
         }
         mVakitContainer.requestLayout();
 
+        int darkerBg = ColorUtils.shadeColor(activeColor,0.8f);
+        mRootView.setBackgroundColor(darkerBg); // settings pane bg
         if(Build.VERSION.SDK_INT >= 21)
-            getActivity().getWindow().setStatusBarColor(ColorUtils.shadeColor(activeColor,0.8f));
+            getActivity().getWindow().setStatusBarColor(darkerBg);
     }
 
     private void setActive(int pos) {
@@ -314,24 +319,20 @@ public class VakitFragment extends Fragment {
     }
 
     private void setAlarm(final int pos, final boolean status) {
-        Log.i("Alarm",status+"");
-//        float fromAlpha = status ? 0f : 1f;
-//        float toAlpha = status ? 1f : 0f;
-//        Animation a = new AlphaAnimation(fromAlpha,toAlpha);
-//        a.setDuration(230);
-//        a.setFillAfter(true);
         float deltaPX = UnitConverter.dpToPx(LEFT_SLIDE_AMOUNT_DP);
         float fromXDelta = status ? deltaPX : 0;
         float toXDelta = status ? 0 : deltaPX;
         Animation tr = new TranslateAnimation(fromXDelta, toXDelta,0,0);
         tr.setFillAfter(true);
-        tr.setDuration(270);
+        tr.setDuration(AnimConstants.ANIM_TIME);
         if(status)
-            tr.setStartOffset(1000+270);
+            tr.setStartOffset(AnimConstants.WAIT_TIME+ AnimConstants.ANIM_TIME);
+
         tr.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-
+                if(status)
+                    rows.get(pos).alarmIcon.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -359,7 +360,7 @@ public class VakitFragment extends Fragment {
                     rows.get(pos).alarmStatus.setTextColor(getResources().getColor(R.color.positive_action));
                 }
             }
-        },1000+270*2);
+        },AnimConstants.WAIT_TIME+AnimConstants.ANIM_TIME*2);
     }
 
     private boolean getAlarmStatus(int pos) {

@@ -18,7 +18,7 @@ public class RemainingTimeRevealAnimation extends Animation {
     public RemainingTimeRevealAnimation(View v, boolean show) {
         this.v = v;
         this.show = show;
-        setDuration(270);
+        setDuration(AnimConstants.ANIM_TIME);
         setFillAfter(true);
         this.desiredHeightPX = UnitConverter.dpToPx(75);
         v.getLayoutParams().height = show ? 0 : desiredHeightPX;

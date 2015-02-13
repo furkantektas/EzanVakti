@@ -18,7 +18,7 @@ public class RevealAnimation extends Animation {
         this.v = v;
         this.show = show;
         this.desiredHeightPX = UnitConverter.dpToPx(desiredHeight);
-        setDuration(270);
+        setDuration(AnimConstants.ANIM_TIME);
         setFillAfter(true);
         v.getLayoutParams().height = show ? 0 : desiredHeightPX;
     }
