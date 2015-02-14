@@ -12,6 +12,8 @@ import com.ezanvakti.R;
 public class ColorUtils {
     public static int getColor(Context context, int pos) {
         int resId = getColorResource(pos);
+        if(context == null || context.getResources() == null)
+            return -1;
         return context.getResources().getColor(resId);
     }
 

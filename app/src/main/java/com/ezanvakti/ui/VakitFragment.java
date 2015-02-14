@@ -38,6 +38,7 @@ import com.innovattic.font.FontTextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -243,9 +244,10 @@ public class VakitFragment extends Fragment {
     }
 
     private void setRemainingTime() {
-        if(mActive >= 0 && mActive < 6) {
+        if(mActive >= 0) {
             VakitRow row = rows.get(mActive);
-            row.remainingTime.setTargetDate(mVakit.getVakit(mActive+1));
+            row.remainingTime.setTargetDate(VakitUtils.getNextVakit(mVakit));
+
 
             row.remainingTime.setListener(new CountDownTimerWidget.CountdownTimerInterface() {
                 @Override
@@ -255,7 +257,12 @@ public class VakitFragment extends Fragment {
 
                 @Override
                 public void onFinish() {
-                    setActive(mActive+1);
+                    if(mActive == 5) { // yatsi/isha time ended
+                        // assuming that imsak/fajr is after midnight
+                        mVakit = DBUtils.getTodaysVakit();
+                        setActive(0);
+                    } else
+                        setActive(mActive+1);
                     setRemainingTime();
                 }
             });
@@ -270,7 +277,7 @@ public class VakitFragment extends Fragment {
     }
 
     private void setWeights(int active) {
-        Log.i("setWeights",active+"");
+        Log.i("setWeights", active + "");
         for(int i=0;i<6;++i) {
             int weight = 2;
             if (i == active)
@@ -308,8 +315,10 @@ public class VakitFragment extends Fragment {
 
         int darkerBg = ColorUtils.shadeColor(activeColor, 0.8f);
         mRootView.setBackgroundColor(darkerBg); // settings pane bg
-        if(Build.VERSION.SDK_INT >= 21)
-            getActivity().getWindow().setStatusBarColor(darkerBg);
+        if(Build.VERSION.SDK_INT >= 21) {
+            if(getActivity() != null && getActivity().getWindow() != null)
+                getActivity().getWindow().setStatusBarColor(darkerBg);
+        }
     }
 
     private void setActive(int pos) {

@@ -7,6 +7,8 @@ import com.ezanvakti.db.model.Ilce;
 import com.ezanvakti.db.model.Vakit;
 import com.ezanvakti.rest.RestClient;
 
+import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -51,14 +53,43 @@ public class DBUtils {
                     }
                 });
     }
-
-
-    public static Vakit getTodaysVakit() {
-        String today = Vakit.DATE_FORMAT.format(new Date());
-        List<Vakit> vakitList = new Select().from(Vakit.class).where("MiladiTarihKisa = ?", today).limit(1).execute();
+    public static Vakit getVakitOfDays(String date) {
+        List<Vakit> vakitList = new Select().from(Vakit.class).where("MiladiTarihKisa = ?", date).limit(1).execute();
         if(vakitList != null && vakitList.size() > 0)
             return vakitList.get(0);
         return null;
+    }
+
+    public static Vakit getVakitOfDays(Date d) {
+        String today = Vakit.DATE_FORMAT.format(d);
+        return getVakitOfDays(today);
+    }
+
+    public static Vakit getTodaysVakit() {
+        return getVakitOfDays(new Date());
+    }
+
+    public static Vakit getTomorrowsVakit() {
+        Date date = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.DATE, 1);
+        date = c.getTime();
+        return getVakitOfDays(date);
+    }
+
+    public static Vakit getTomorrowsVakit(Vakit v) {
+        Date date;
+        try {
+            date = Vakit.DATE_FORMAT.parse(v.miladiShort);
+        } catch (ParseException e) {
+            return null;
+        }
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.DATE, 1);
+        date = c.getTime();
+        return getVakitOfDays(date);
     }
 
     public static interface ProcessStatusListener {
