@@ -52,10 +52,9 @@
             android:id="@+id/vakit_label"
                 android:alpha="0.8" />
 
-            <com.innovattic.font.FontTextView
+            <com.ezanvakti.ui.CountDownTimerWidget
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:text="00:00"
                 app:font="RobotoCondensed"
                 android:textStyle="bold"
                 android:textSize="60dp"

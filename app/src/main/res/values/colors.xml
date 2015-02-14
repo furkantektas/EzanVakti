@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="imsak">#CADAF4</color>
+    <!--Colors from: http://codepen.io/tumanova/pen/tkvmi-->
+    <color name="imsak">#95b3bf</color>
     <color name="gunes">#eabc96</color>
     <color name="ogle">#8DD6C3</color>
     <color name="ikindi">#db8876</color>

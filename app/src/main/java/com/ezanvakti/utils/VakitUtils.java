@@ -31,7 +31,7 @@ public class VakitUtils {
         Date now = new Date();
         for(int i = 5; i >= 0; --i) {
             if(!now.before(v.getVakit(i)))
-                return i+1;
+                return i;
         }
         return 5;
     }

@@ -6,6 +6,9 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -16,6 +19,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.ezanvakti.R;
 import com.ezanvakti.anim.AnimConstants;
@@ -155,7 +159,7 @@ public class VakitFragment extends Fragment {
 
         mVakitContainer.removeAllViews();
         rows.clear();
-
+        final int active = VakitUtils.getCurrentVakit(mVakit);
         for(int i=0;i<6;++i) {
             View temp = inflater.inflate(R.layout.vakit_row, mVakitContainer, false);
             final VakitRow row = new VakitRow();
@@ -164,20 +168,21 @@ public class VakitFragment extends Fragment {
             row.alarmContainer = (LinearLayout) temp.findViewById(R.id.alarm_container);
             row.label = (FontTextView) temp.findViewById(R.id.vakit_label);
             row.time = (FontTextView) temp.findViewById(R.id.vakit_time);
-            row.remainingTime = (FontTextView) temp.findViewById(R.id.vakit_remaining_time);
+            row.remainingTime = (CountDownTimerWidget) temp.findViewById(R.id.vakit_remaining_time);
             row.alarmIcon = (FontTextView) temp.findViewById(R.id.alarm_icon);
             row.alarmStatus = (FontTextView) temp.findViewById(R.id.alarm_status);
 
-            row.label.setShadowLayer(0,1,1, SHADOW_COLOR);
-            row.time.setShadowLayer(0,1,1, SHADOW_COLOR);
+            row.label.setShadowLayer(0, 1, 1, SHADOW_COLOR);
+            row.time.setShadowLayer(0, 1, 1, SHADOW_COLOR);
             row.remainingTime.setShadowLayer(0,1,1, SHADOW_COLOR);
             row.label.setShadowLayer(0,1,1, SHADOW_COLOR);
             row.alarmIcon.setShadowLayer(0, 1, 1, SHADOW_COLOR);
 
             row.label.setText(mVakit.getVakitStringResource(i));
             row.time.setText(HHMM.format(mVakit.getVakit(i)));
-            Log.i("inflater",row.time.getText()+"");
             final int pos = i;
+
+
 
             row.infoContainer.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
                 @Override
@@ -233,9 +238,29 @@ public class VakitFragment extends Fragment {
             mVakitContainer.addView(temp);
             rows.add(row);
         }
-        int active = VakitUtils.getCurrentVakit(mVakit);
         Log.i("Active",""+active);
         setActive(active);
+        setRemainingTime();
+    }
+
+    private void setRemainingTime() {
+        if(mActive >= 0 && mActive < 6) {
+            VakitRow row = rows.get(mActive);
+            row.remainingTime.setTargetDate(mVakit.getVakit(mActive+1));
+
+            row.remainingTime.setListener(new CountDownTimerWidget.CountdownTimerInterface() {
+                @Override
+                public void onTick(long l) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    setActive(mActive+1);
+                    setRemainingTime();
+                }
+            });
+        }
     }
 
     @Override
@@ -282,7 +307,7 @@ public class VakitFragment extends Fragment {
         }
         mVakitContainer.requestLayout();
 
-        int darkerBg = ColorUtils.shadeColor(activeColor,0.8f);
+        int darkerBg = ColorUtils.shadeColor(activeColor, 0.8f);
         mRootView.setBackgroundColor(darkerBg); // settings pane bg
         if(Build.VERSION.SDK_INT >= 21)
             getActivity().getWindow().setStatusBarColor(darkerBg);
@@ -386,7 +411,7 @@ public class VakitFragment extends Fragment {
         public LinearLayout alarmContainer;
         public FontTextView label;
         public FontTextView time;
-        public FontTextView remainingTime;
+        public CountDownTimerWidget remainingTime;
         public FontTextView alarmIcon;
         public FontTextView alarmStatus;
     }
