@@ -2,6 +2,7 @@ package com.ezanvakti.ui;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -117,10 +118,8 @@ public class VakitFragment extends Fragment {
         mSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.container, UlkeListFragment.newInstance())
-                        .addToBackStack(FRAGMENT_NAME)
-                        .commit();
+                Intent i = new Intent(getActivity(),AddLocationActivity.class);
+                startActivity(i);
             }
         });
         populateVakitViews(inflater);

@@ -1,9 +1,27 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@color/primary_bg</item>
         <item name="android:colorBackground">@color/primary_bg</item>
         <item name="android:textColorPrimary">#ffffff</item>
+</style>
+    <style name="AppThemeActionBar" parent="Theme.AppCompat">
+        <item name="android:windowBackground">@color/primary_bg</item>
+        <item name="android:colorBackground">@color/primary_bg</item>
+        <item name="android:textColorPrimary">#ffffff</item>
+        <item name="searchViewStyle">@style/MySearchViewStyle</item>
+        <item name="actionBarStyle">@style/MyActionBarStyle</item>
+    </style>
+    <style name="MySearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <!-- Background for the search query section (e.g. EditText) -->
+        <item name="queryBackground">@color/primary_dark</item>
+        <!-- Background for the actions section (e.g. voice, submit) -->
+        <item name="submitBackground">@color/primary_dark</item>
+        <!-- Close button icon -->
+    </style>
+    <style name="MyActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/primary_dark</item>
+        <item name="background">@color/primary_dark</item>
     </style>
 </resources>

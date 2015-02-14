@@ -4,12 +4,19 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.ezanvakti.MainActivity;
 import com.ezanvakti.R;
 import com.ezanvakti.rest.RestClient;
 import com.ezanvakti.rest.model.Ilce;
@@ -26,8 +33,9 @@ import retrofit.client.Response;
  * <p/>
  * <p/>
  */
-public class IlceListFragment extends ListFragment {
-
+public class IlceListFragment extends ListFragment implements SearchView.OnQueryTextListener {
+    private ArrayAdapter<Ilce> mAdapter = null;
+    private SearchView searchView;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SEHIR_ID = "sehirID";
@@ -52,8 +60,35 @@ public class IlceListFragment extends ListFragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.menu_add_location, menu);
+        searchView = (SearchView)menu.findItem(R.id.search).getActionView();
+        if(searchView != null)
+            searchView.setOnQueryTextListener(this);
+    }
+
+    private void setTitle() {
+        Activity act = getActivity();
+        if(act instanceof ActionBarActivity) {
+            ActionBar bar = ((ActionBarActivity) act).getSupportActionBar();
+            if(bar != null)
+                bar.setTitle(R.string.select_ilce);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setTitle();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        setTitle();
 
         if (getArguments() != null) {
             mSehirID = getArguments().getString(ARG_SEHIR_ID);
@@ -62,8 +97,9 @@ public class IlceListFragment extends ListFragment {
         RestClient.getAPIService().getIlceler(mSehirID, new Callback<List<Ilce>>() {
             @Override
             public void success(List<Ilce> ilceList, Response response) {
-                setListAdapter(new ArrayAdapter<Ilce>(getActivity(),
-                        android.R.layout.simple_list_item_1, android.R.id.text1, ilceList));
+                mAdapter = new ArrayAdapter<Ilce>(getActivity(),
+                        android.R.layout.simple_list_item_1, android.R.id.text1, ilceList);
+                setListAdapter(mAdapter);
             }
 
             @Override
@@ -78,18 +114,36 @@ public class IlceListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
+        searchView.clearFocus();
+        searchView.setQuery("", false);
+        setListShown(false); // show loading indicator
         Ilce ilce = ((Ilce)l.getAdapter().getItem(position));
         DBUtils.fetchAndSaveVakits(ilce, new DBUtils.ProcessStatusListener() {
             @Override
             public void onSuccess() {
-                getFragmentManager().popBackStack(VakitFragment.FRAGMENT_NAME, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getActivity().finish();
             }
 
             @Override
             public void onFailure() {
                 Toast.makeText(getActivity(),R.string.err_get_vakitler,Toast.LENGTH_LONG).show();
+                setListShown(true); // hide loading indicator
             }
         });
     }
 
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if(mAdapter == null)
+            return false;
+        mAdapter.getFilter().filter(newText);
+        mAdapter.notifyDataSetChanged();
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
 }

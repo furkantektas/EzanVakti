@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:colorPrimary">@color/primary_bg</item>
         <!--   darker variant for the status bar and contextual app bars -->
         <item name="android:colorPrimaryDark">@color/primary_dark</item>
@@ -10,5 +10,17 @@
         <item name="android:windowBackground">@color/primary_bg</item>
         <item name="android:colorBackground">@color/primary_bg</item>
         <item name="android:textColorPrimary">#ffffff</item>
+    </style>
+    <style name="AppThemeActionBar" parent="Theme.AppCompat">
+        <item name="android:colorPrimary">@color/primary_bg</item>
+        <!--   darker variant for the status bar and contextual app bars -->
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <!--   theme UI controls like checkboxes and text fields -->
+        <item name="android:colorAccent">@color/primary_text</item>
+        <item name="android:windowBackground">@color/primary_bg</item>
+        <item name="android:colorBackground">@color/primary_bg</item>
+        <item name="android:textColorPrimary">#ffffff</item>
+        <item name="searchViewStyle">@style/MySearchViewStyle</item>
+        <item name="actionBarStyle">@style/MyActionBarStyle</item>
     </style>
 </resources>
