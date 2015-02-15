@@ -70,12 +70,7 @@ public class DBUtils {
     }
 
     public static Vakit getTomorrowsVakit() {
-        Date date = new Date();
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
-        c.add(Calendar.DATE, 1);
-        date = c.getTime();
-        return getVakitOfDays(date);
+        return getVakitOfDays(VakitUtils.getNextDay());
     }
 
     public static Vakit getTomorrowsVakit(Vakit v) {
@@ -85,10 +80,9 @@ public class DBUtils {
         } catch (ParseException e) {
             return null;
         }
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
-        c.add(Calendar.DATE, 1);
-        date = c.getTime();
+        if(date == null)
+            date = new Date();
+        date = VakitUtils.getNextDay(date);
         return getVakitOfDays(date);
     }
 

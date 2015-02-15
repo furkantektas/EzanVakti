@@ -2,6 +2,7 @@ package com.ezanvakti.utils;
 
 import com.ezanvakti.db.model.Vakit;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -58,6 +59,30 @@ public class VakitUtils {
                 return i;
         }
         return 5;
+    }
+
+    /**
+     * Returns Date object of tomorrow's 00:00
+     * @return
+     */
+    public static Date getNextDay() {
+        return getNextDay(new Date());
+    }
+
+    /**
+     * Returns Date object of the next day of d.
+     * @return
+     */
+    public static Date getNextDay(Date d) {
+        Calendar c = Calendar.getInstance();
+        if(d != null)
+            c.setTime(d);
+        c.set(Calendar.HOUR_OF_DAY,0);
+        c.set(Calendar.MINUTE,0);
+        c.set(Calendar.SECOND,0);
+        c.set(Calendar.MILLISECOND,0);
+        c.add(Calendar.DAY_OF_MONTH, 1);
+        return c.getTime();
     }
 
 }

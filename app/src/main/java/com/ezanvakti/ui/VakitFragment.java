@@ -2,10 +2,15 @@ package com.ezanvakti.ui;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -179,7 +184,6 @@ public class VakitFragment extends Fragment {
             row.alarmIcon.setShadowLayer(0, 1, 1, SHADOW_COLOR);
 
             row.label.setText(mVakit.getVakitStringResource(i));
-            row.time.setText(HHMM.format(mVakit.getVakit(i)));
             final int pos = i;
 
 
@@ -238,6 +242,8 @@ public class VakitFragment extends Fragment {
             mVakitContainer.addView(temp);
             rows.add(row);
         }
+
+        setVakits();
         Log.i("Active",""+active);
         setActive(active);
         setRemainingTime();
@@ -248,6 +254,27 @@ public class VakitFragment extends Fragment {
             VakitRow row = rows.get(mActive);
             row.remainingTime.setTargetDate(VakitUtils.getNextVakit(mVakit));
 
+            // TODO: don't set handler after midnight
+            // yatsi/isha time. Set countdowntimer to midnight for updating new day's vakits
+            if(mActive == 5) {
+                if(getActivity() !=  null) {
+
+                    final Handler handler = new Handler();
+
+                    Runnable eachMinute = new Runnable() {
+                        @Override
+                        public void run() {
+                            // get new day's vakits
+                            mVakit = DBUtils.getTodaysVakit();
+                            setVakits(); // update vakits at midnight
+                        }
+                    };
+                    long millisUntilMidnight = VakitUtils.getNextDay().getTime()-new Date().getTime();
+                    Log.i("Time",millisUntilMidnight+"");
+                    // Schedule the first execution
+                    handler.postAtTime(eachMinute, SystemClock.uptimeMillis()+millisUntilMidnight);
+                }
+            }
 
             row.remainingTime.setListener(new CountDownTimerWidget.CountdownTimerInterface() {
                 @Override
@@ -260,6 +287,7 @@ public class VakitFragment extends Fragment {
                     if(mActive == 5) { // yatsi/isha time ended
                         // assuming that imsak/fajr is after midnight
                         mVakit = DBUtils.getTodaysVakit();
+                        setVakits(); // day changed, update vakit times
                         setActive(0);
                     } else
                         setActive(mActive+1);
@@ -341,6 +369,12 @@ public class VakitFragment extends Fragment {
             scaleDownRemainingTime(mActive);
         scaleUpRemainingTime(pos);
         mActive = pos;
+    }
+
+    private void setVakits() {
+        for(int i=0;i<6;++i) {
+            rows.get(i).time.setText(HHMM.format(mVakit.getVakit(i)));
+        }
     }
 
     private void remainingTimeAnimation(int pos, boolean show) {
