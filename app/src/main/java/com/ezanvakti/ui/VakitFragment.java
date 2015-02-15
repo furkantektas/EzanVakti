@@ -195,7 +195,10 @@ public class VakitFragment extends Fragment {
                     // clearing on touch listener
                     row.infoContainer.setOnTouchListener(null);
                     super.onSwipeLeft();
-                    RevealHideBySlideAnimation.startAnimation(row.infoContainer,50);
+                    RevealHideBySlideAnimation.startAnimation(row.infoContainer,LEFT_SLIDE_AMOUNT_DP);
+                    RevealHideBySlideAnimation.startAnimation(row.label,-LEFT_SLIDE_AMOUNT_DP);
+                    RevealHideBySlideAnimation.startAnimation(row.remainingTime,-LEFT_SLIDE_AMOUNT_DP);
+                    RevealHideBySlideAnimation.startAnimation(row.time,-LEFT_SLIDE_AMOUNT_DP);
                     toggleAlarm(pos);
                     toggleSettings(false);
 

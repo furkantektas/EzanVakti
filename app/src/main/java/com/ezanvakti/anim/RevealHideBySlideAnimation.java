@@ -28,8 +28,8 @@ public class RevealHideBySlideAnimation  {
             @Override
             public void onAnimationEnd(Animation animation) {
                 TranslateAnimation translateAnimation2 = new TranslateAnimation(-marginPX,0f,0.0f,0.0f);
-                translateAnimation2.setDuration(270); // in ms
-                translateAnimation2.setStartOffset(1000);
+                translateAnimation2.setDuration(AnimConstants.ANIM_TIME); // in ms
+                translateAnimation2.setStartOffset(AnimConstants.WAIT_TIME);
                 v.startAnimation(translateAnimation2);
             }
 
