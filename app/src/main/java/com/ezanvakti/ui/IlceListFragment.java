@@ -97,9 +97,11 @@ public class IlceListFragment extends ListFragment implements SearchView.OnQuery
         RestClient.getAPIService().getIlceler(mSehirID, new Callback<List<Ilce>>() {
             @Override
             public void success(List<Ilce> ilceList, Response response) {
-                mAdapter = new ArrayAdapter<Ilce>(getActivity(),
-                        android.R.layout.simple_list_item_1, android.R.id.text1, ilceList);
-                setListAdapter(mAdapter);
+                if(getActivity() != null) {
+                    mAdapter = new ArrayAdapter<Ilce>(getActivity(),
+                            android.R.layout.simple_list_item_1, android.R.id.text1, ilceList);
+                    setListAdapter(mAdapter);
+                }
             }
 
             @Override

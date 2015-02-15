@@ -79,11 +79,13 @@ public class UlkeListFragment extends ListFragment implements SearchView.OnQuery
         RestClient.getAPIService().getUlkeler(new Callback<List<Ulke>>() {
             @Override
             public void success(List<Ulke> ulkeList, Response response) {
-                mAdapter = new ArrayAdapter<Ulke>(getActivity(),
-                        android.R.layout.simple_list_item_1, android.R.id.text1, ulkeList);
+                if(getActivity() != null) {
+                    mAdapter = new ArrayAdapter<Ulke>(getActivity(),
+                            android.R.layout.simple_list_item_1, android.R.id.text1, ulkeList);
 
-                setListAdapter(mAdapter);
-                getListView().setTextFilterEnabled(true);
+                    setListAdapter(mAdapter);
+                    getListView().setTextFilterEnabled(true);
+                }
             }
 
             @Override

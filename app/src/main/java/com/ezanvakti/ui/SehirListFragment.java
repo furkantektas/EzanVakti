@@ -93,9 +93,11 @@ public class SehirListFragment extends ListFragment implements SearchView.OnQuer
         RestClient.getAPIService().getSehirler(mUlkeID, new Callback<List<Sehir>>() {
             @Override
             public void success(List<Sehir> sehirList, Response response) {
-                mAdapter = new ArrayAdapter<Sehir>(getActivity(),
-                        android.R.layout.simple_list_item_1, android.R.id.text1, sehirList);
-                setListAdapter(mAdapter);
+                if(getActivity() != null) {
+                    mAdapter = new ArrayAdapter<Sehir>(getActivity(),
+                            android.R.layout.simple_list_item_1, android.R.id.text1, sehirList);
+                    setListAdapter(mAdapter);
+                }
             }
 
             @Override
