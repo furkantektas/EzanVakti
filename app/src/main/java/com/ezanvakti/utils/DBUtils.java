@@ -74,9 +74,10 @@ public class DBUtils {
     }
 
     public static Vakit getTomorrowsVakit(Vakit v) {
-        Date date;
+        Date date = null;
         try {
-            date = Vakit.DATE_FORMAT.parse(v.miladiShort);
+            if(v != null)
+                date = Vakit.DATE_FORMAT.parse(v.miladiShort);
         } catch (ParseException e) {
             return null;
         }

@@ -8,13 +8,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,7 +21,6 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.ezanvakti.R;
 import com.ezanvakti.anim.AnimConstants;
@@ -41,7 +36,6 @@ import com.ezanvakti.utils.UnitConverter;
 import com.ezanvakti.utils.VakitUtils;
 import com.innovattic.font.FontTextView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -53,7 +47,6 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class VakitFragment extends Fragment {
-    private static final SimpleDateFormat HHMM = new SimpleDateFormat("HH:mm");
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -81,6 +74,7 @@ public class VakitFragment extends Fragment {
 
     private static final int LEFT_SLIDE_AMOUNT_DP = 50;
 
+    private LayoutInflater mInflater = null;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -117,6 +111,7 @@ public class VakitFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i("VakitFragment","onCreateView");
+        mInflater = inflater;
         mRootView = inflater.inflate(R.layout.fragment_vakit, container, false);
         mVakitContainer = (LinearLayout) mRootView.findViewById(R.id.vakit_container);
         mSettingsButton = (FontTextView) mRootView.findViewById(R.id.settings_icon);
@@ -128,7 +123,12 @@ public class VakitFragment extends Fragment {
                 startActivity(i);
             }
         });
-        populateVakitViews(inflater);
+        mVakit = DBUtils.getTodaysVakit();
+        if(mVakit == null) {
+            Intent i = new Intent(getActivity(),AddLocationActivity.class);
+            startActivity(i);
+        } else
+            populateVakitViews(inflater);
         return mRootView;
     }
 
@@ -153,14 +153,8 @@ public class VakitFragment extends Fragment {
     }
 
     private void populateVakitViews(LayoutInflater inflater) {
-        mVakit = DBUtils.getTodaysVakit();
-        if(mVakit == null) {
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.container, UlkeListFragment.newInstance())
-                    .addToBackStack(FRAGMENT_NAME)
-                    .commit();
+        if(mVakit == null)
             return;
-        }
 
         mVakitContainer.removeAllViews();
         rows.clear();
@@ -264,7 +258,7 @@ public class VakitFragment extends Fragment {
 
                     final Handler handler = new Handler();
 
-                    Runnable eachMinute = new Runnable() {
+                    Runnable uiUpdater = new Runnable() {
                         @Override
                         public void run() {
                             // get new day's vakits
@@ -275,7 +269,7 @@ public class VakitFragment extends Fragment {
                     long millisUntilMidnight = VakitUtils.getNextDay().getTime()-new Date().getTime();
                     Log.i("Time",millisUntilMidnight+"");
                     // Schedule the first execution
-                    handler.postAtTime(eachMinute, SystemClock.uptimeMillis()+millisUntilMidnight);
+                    handler.postAtTime(uiUpdater, SystemClock.uptimeMillis()+millisUntilMidnight);
                 }
             }
 
@@ -304,7 +298,18 @@ public class VakitFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.i("onResume","VakitFragment");
-        setActive(mActive, true);
+
+        if(mVakit == null)
+            mVakit = DBUtils.getTodaysVakit();
+        // on first run, populateVakitViews is not completed, to initialize UI we will
+        // call it again
+        if(rows == null || rows.size() == 0)
+            populateVakitViews(mInflater);
+        else if(getActivity() != null) { // check if fragment was detached
+            // on first run, mvakit is null after AddLocation activity finished
+            setActive(mActive, true);
+        }
+
     }
 
     private void setWeights(int active) {
@@ -376,7 +381,7 @@ public class VakitFragment extends Fragment {
 
     private void setVakits() {
         for(int i=0;i<6;++i) {
-            rows.get(i).time.setText(HHMM.format(mVakit.getVakit(i)));
+            rows.get(i).time.setText(VakitUtils.HHMM.format(mVakit.getVakit(i)));
         }
     }
 

@@ -2,6 +2,7 @@ package com.ezanvakti.utils;
 
 import com.ezanvakti.db.model.Vakit;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -9,6 +10,8 @@ import java.util.Date;
  * Created by Furkan Tektas on 2/2/15.
  */
 public class VakitUtils {
+    public static final SimpleDateFormat HHMM = new SimpleDateFormat("HH:mm");
+
     /**
      * Returns the index of next vakit
      * @param v
@@ -30,11 +33,18 @@ public class VakitUtils {
      * @return
      */
     public static Date getNextVakit(Vakit v) {
-        Date now = new Date();
+        return getNextVakit(new Date());
+    }
+
+    public static Date getNextVakit(Date vakit) {
+        return getNextVakit(vakit,DBUtils.getTodaysVakit());
+    }
+
+    public static Date getNextVakit(Date vakit, Vakit v) {
         // yatsi/isha has not passed
-        if(now.before(v.yatsi)) {
+        if(v != null && vakit.before(v.yatsi)) {
             for (int i = 0; i < 6; ++i) {
-                if (now.before(v.getVakit(i)))
+                if (vakit.before(v.getVakit(i)))
                     return v.getVakit(i);
             }
         } else {

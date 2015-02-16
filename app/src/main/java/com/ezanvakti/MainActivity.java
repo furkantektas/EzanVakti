@@ -1,10 +1,12 @@
 package com.ezanvakti;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.ezanvakti.ui.VakitFragment;
+import com.ezanvakti.utils.NotificationService;
 import com.innovattic.font.TypefaceManager;
 
 
@@ -19,6 +21,8 @@ public class MainActivity extends ActionBarActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, new VakitFragment())
                 .commit();
+        Intent intent = new Intent(this, NotificationService.class);
+        startService(intent);
     }
 
 

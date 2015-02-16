@@ -34,11 +34,18 @@
             android:name=".ui.AddLocationActivity"
             android:label="@string/title_activity_add_location"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppThemeActionBar">
+            android:theme="@style/AppThemeActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ezanvakti.MainActivity" />
         </activity>
+
+        <service
+            android:name=".utils.NotificationService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+
     </application>
 
 </manifest>
