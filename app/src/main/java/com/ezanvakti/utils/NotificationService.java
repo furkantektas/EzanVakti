@@ -27,7 +27,7 @@ public class NotificationService extends Service {
     private Intent alarmMsgIntent;
     private static final int NOTIFICATION_ID = 430;
     public static final String NOTIFY_VAKIT = "notify_vakit";
-
+    private Date lastNotificationTime = new Date();
 
     // TODO: Use shared prefs and customzie each tim's notification time
     private static int NOTIFY_BEFORE = 5; // min
@@ -40,6 +40,8 @@ public class NotificationService extends Service {
         super.onCreate();
         mVakit = DBUtils.getTodaysVakit();
         alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmMsgIntent = new Intent(this, NotificationService.class);
+        alarmMsgIntent.setAction(NOTIFY_VAKIT);
         setNextAlarm();
     }
 
@@ -52,13 +54,9 @@ public class NotificationService extends Service {
             Calendar c = Calendar.getInstance();
             c.setTime(nextVakit);
             c.add(Calendar.MINUTE, -NOTIFY_BEFORE);
-            c.add(Calendar.SECOND,5);
 
 
-            alarmMsgIntent = new Intent(this, NotificationService.class);
-            alarmMsgIntent.setAction(NOTIFY_VAKIT);
-
-            alarmIntent = PendingIntent.getService(this,30,alarmMsgIntent,0);
+            alarmIntent = PendingIntent.getService(this,0,alarmMsgIntent,0);
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
                 alarmMgr.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), alarmIntent);
@@ -72,7 +70,10 @@ public class NotificationService extends Service {
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
         if(intent != null && NOTIFY_VAKIT.equals(intent.getAction())) {
-            notifyNextVakit();
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.MINUTE,NOTIFY_BEFORE);
+            if(c.getTime().before(lastNotificationTime)) // avoid flood
+                notifyNextVakit();
             setNextAlarm(VakitUtils.getNextVakit(VakitUtils.getNextVakit(mVakit),mVakit));
         } else {
             Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
