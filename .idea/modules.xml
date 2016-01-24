@@ -5,8 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/Android-Font-Integration/Android-Font-Integration.iml" filepath="$PROJECT_DIR$/Android-Font-Integration/Android-Font-Integration.iml" />
       <module fileurl="file://$PROJECT_DIR$/EzanVakti.iml" filepath="$PROJECT_DIR$/EzanVakti.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ezanwear/ezanwear.iml" filepath="$PROJECT_DIR$/ezanwear/ezanwear.iml" />
       <module fileurl="file://$PROJECT_DIR$/Android-Font-Integration/lib/lib.iml" filepath="$PROJECT_DIR$/Android-Font-Integration/lib/lib.iml" />
     </modules>
   </component>
 </project>
-

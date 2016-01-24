@@ -138,4 +138,25 @@ public class Vakit extends Model {
                 return 0;
         }
     }
+
+    /**
+     * Returns a long array containing vakits.
+     * It's used to send vakits to wear.
+     * @return vakits as long arr
+     */
+    public long[] getAsLongArray() {
+        long[] vakits = new long[9];
+
+        vakits[0] = this.imsak.getTime();
+        vakits[1] = this.gunes.getTime();
+        vakits[2] = this.ogle.getTime();
+        vakits[3] = this.ikindi.getTime();
+        vakits[4] = this.aksam.getTime();
+        vakits[5] = this.yatsi.getTime();
+        vakits[6] = this.kible.getTime();
+        vakits[7] = this.gunDogumu.getTime();
+        vakits[8] = this.gunBatimi.getTime();
+
+        return vakits;
+    }
 }

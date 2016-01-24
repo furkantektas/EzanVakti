@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.wearable.view.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ezanvakti.MainActivity"
+    tools:deviceIds="wear">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/vakit_title"
+        app:layout_box="all"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.Wearable.Medium"
+        android:layout_above="@+id/vakit"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/vakit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/vakit"
+        app:layout_box="all"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.Wearable.Large"
+        android:layout_centerInParent="true" />
+
+    </RelativeLayout>
+</android.support.wearable.view.BoxInsetLayout>

@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ezanvakti" >
+    package="com.ezanvakti">
+
+    <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name="com.activeandroid.app.Application"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="AA_DB_NAME"
             android:value="EzanVakti.db" />
@@ -23,7 +27,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,7 +38,7 @@
             android:name=".ui.AddLocationActivity"
             android:label="@string/title_activity_add_location"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppThemeActionBar" >
+            android:theme="@style/AppThemeActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ezanvakti.MainActivity" />
@@ -43,9 +47,11 @@
         <service
             android:name=".utils.NotificationService"
             android:enabled="true"
-            android:exported="true" >
-        </service>
-
+            android:exported="false" />
+        <service
+            android:name=".WearService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

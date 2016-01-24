@@ -5,16 +5,17 @@
       <GradleProjectSettings>
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="1.8" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/Android-Font-Integration" />
             <option value="$PROJECT_DIR$/Android-Font-Integration/lib" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/ezanwear" />
           </set>
         </option>
       </GradleProjectSettings>
     </option>
   </component>
 </project>
-

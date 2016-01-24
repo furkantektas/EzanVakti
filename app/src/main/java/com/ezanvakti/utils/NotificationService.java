@@ -110,7 +110,8 @@ public class NotificationService extends Service {
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(label)
                         .setContentText(time)
-                        .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE);
+                        .setCategory(Notification.CATEGORY_ALARM)
+                        .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, MainActivity.class);
 

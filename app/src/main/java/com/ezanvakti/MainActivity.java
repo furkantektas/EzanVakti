@@ -23,6 +23,9 @@ public class MainActivity extends ActionBarActivity {
                 .commit();
         Intent intent = new Intent(this, NotificationService.class);
         startService(intent);
+
+        intent = new Intent(this, WearService.class);
+        startService(intent);
     }
 
 
